@@ -12,6 +12,15 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      fontFamily: {
+        outfitThin: ["outfit-thin"], // Replace with your font name
+        outfitLight: ["outfit-light"], // Replace with your font name
+        outfitBold: ["outfit-bold"], // Replace with your font name
+        outfitBlack: ["outfit-Black"], // Replace with your font name
+        outfitSemiBold: ["outfit-semiBold"], // Replace with your font name
+        outfitRegular: ["outfit-regular"], // Replace with your font name
+        outfitMedium: ["outfit-medium"], // Replace with your font name
+      },
     },
   },
   plugins: [],
