@@ -281,6 +281,7 @@ const Page = () => {
       console.error("Stripe Checkout URL is missing!", data);
       return;
     }
+    
     if (res.ok && data.url) {
       window.location.href = data.url;
     } else {
