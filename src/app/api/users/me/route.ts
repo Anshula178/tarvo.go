@@ -12,6 +12,6 @@ export async function GET(req: NextRequest) {
     const decoded = jwt.verify(token, process.env.TOKEN_SECRET!);
     return NextResponse.json({ authenticated: true, user: decoded });
   } catch (error) {
-    return NextResponse.json({ message: "Invalid token" }, { status: 401 });
+    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
 }

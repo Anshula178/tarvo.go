@@ -9,7 +9,7 @@ export async function GET(){
          return res;
     } catch (error:any) {
         return NextResponse.json({
-            error:error.message
+            error:(error as Error).message
         },{status:500})
     }
 }

@@ -25,7 +25,7 @@ export async  function POST(req:NextRequest){
             success:true,
             
         })
-    } catch (error:any) {
-        return NextResponse.json({error:error.message})
+    } catch (error) {
+        return NextResponse.json({error:(error as Error).message})
     }
 }

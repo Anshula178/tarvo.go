@@ -2,11 +2,11 @@ import {connect} from "@/dbConfig/dbConfig"
 import User from "@/models/userModel"
 import bcryptjs from "bcryptjs"
 
-import { NextRequest,NextResponse  } from "next/server"
+import { NextRequest, NextResponse  } from "next/server"
 import jwt from  "jsonwebtoken"
 
 connect() 
-export async function POST(req:NextResponse){
+export async function POST(req:NextRequest){
 try {
    const reqBody=await req.json()
    const {email,password}=reqBody;
@@ -34,7 +34,7 @@ try {
   return response
 
 
-} catch (error:any) {
-    return NextResponse.json({error:error.message},{status:500})
+} catch (error) {
+    return NextResponse.json({error:(error as Error).message|| "Server Error"},{status:500})
 }
 }

@@ -1,14 +1,14 @@
 import React from "react";
-import { Mail, MapPin, Phone, Globe, Facebook, Twitter, Youtube, Instagram } from "lucide-react";
+import { Mail, MapPin, Phone,  Facebook, Twitter, Youtube, Instagram } from "lucide-react";
 
 const Footer = () => {
   return (
     <footer className="bg-black text-white py-12 px-8 mt-10">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
-        {/* Logo & Contact Info */}
+       
         <div>
           <h2 className="text-3xl font-bold mb-4">Travel.go</h2>
-          <p className="mb-4">Don't just get there, get there in style.</p>
+          <p className="mb-4">Don&apos;t just get there, get there in style.</p>
           <div className="space-y-3">
             <p className="flex items-center"><MapPin className="mr-2" /> 1901 Thornridge Cir, Hawaii 81063</p>
             <p className="flex items-center"><Phone className="mr-2" /> (308) 555-0121</p>

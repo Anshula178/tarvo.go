@@ -1,9 +1,9 @@
 "use client";
-import Image from "next/image";
+
 import { useParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import { loadStripe } from '@stripe/stripe-js';
-import { Ticket } from "lucide-react";
+
 
 
 const activities = [
@@ -213,12 +213,6 @@ const activities = [
 const Page = () => {
   const params = useParams();
   const id = Number(params.id);
-  const activity = activities.find((item) => item.id === id);
-
-  if (!activity) {
-    return <p className="text-center text-gray-500 mt-20">Activity not found</p>;
-  }
-
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -231,12 +225,19 @@ const Page = () => {
     },
     tickets: 1,
   });
+  const activity = activities.find((item) => item.id === id);
+
+  if (!activity) {
+    return <p className="text-center text-gray-500 mt-20">Activity not found</p>;
+  }
+
+ 
 
   const TICKET_PRICE = activity.price;
   const totalPrice = formData.tickets * TICKET_PRICE;
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type, checked } = e.target;
+    const { name, value, checked } = e.target;
     if (name === 'park' || name === 'wifi') {
       setFormData((prev) => ({
         ...prev,

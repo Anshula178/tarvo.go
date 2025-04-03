@@ -34,7 +34,7 @@ const Page = () => {
 
       const data = await res.json();
       if (res.ok) {
-        setMessage(" Login successful! Redirecting...");
+        setMessage(" Login successful");
         router.push("/");
       } else {
         setError(data.error || "Invalid credentials.");
@@ -102,7 +102,7 @@ const Page = () => {
         </form>
 
         <p className="text-center text-gray-600 mt-4">
-          Don't have an account? {" "}
+          Don&apos;t have an account? {" "}
           <a href="/signup" className="text-blue-500 font-semibold">
             Sign Up
           </a>

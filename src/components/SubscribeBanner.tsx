@@ -9,7 +9,7 @@ const SubscribeBanner = () => {
           <h2 className="text-4xl font-bold mb-4">Subscribe & Get 20% off</h2>
           <p className="mb-6 text-gray-300">
             Join our newsletter and discover new destinations to inspire the traveler within. Plus, get 20% off at our
-            online shop. Every week you'll receive expert advice, tips, exclusive offers, and much more.
+            online shop. Every week you&apos;ll receive expert advice, tips, exclusive offers, and much more.
           </p>
 
          
