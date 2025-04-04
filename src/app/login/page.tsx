@@ -3,47 +3,31 @@
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
 
 const Page = () => {
   const router = useRouter();
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
-  });
-  const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+ const {register,handleSubmit,formState:{errors,isSubmitting}}=useForm()
   const [showPassword, setShowPassword] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
-    setError("");
-
+  const onSubmit = async (data:any) => {
     try {
       const res = await fetch("/api/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
+        body: JSON.stringify(data),
       });
 
-      const data = await res.json();
+      const result = await res.json();
       if (res.ok) {
-        setMessage(" Login successful");
+        toast.success(" Login successful");
         router.push("/");
       } else {
-        setError(data.error || "Invalid credentials.");
+        toast.error( "Invalid credentials.");
       }
     } catch {
-      setError("Error connecting to server.");
-    } finally {
-      setLoading(false);
-    }
+        toast.error("Error connecting to server.");
+    } 
   };
 
   const togglePasswordVisibility = () => {
@@ -55,33 +39,33 @@ const Page = () => {
       <div className="w-full ring-2 py-14 ring-sky-500 max-w-md p-8 bg-white rounded-2xl shadow-lg">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Login</h2>
 
-        {message && <p className="text-center text-green-500">{message}</p>}
-        {error && <p className="text-center text-red-500">{error}</p>}
+       
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label className="block text-gray-600">Email</label>
             <input
               type="email"
-              name="email"
+             {...register("email",{required:"Email is required"})}
               placeholder="Enter your email"
-              value={user.email}
-              onChange={handleChange}
               className="w-full p-3 border text-black rounded-lg focus:ring focus:ring-blue-200 outline-none"
-              required
+              
             />
+            {
+                errors.email&&(
+                    <p className="text-red-500 text-sm mt-1">{String(errors.email.message)}</p> 
+                )
+            }
           </div>
 
           <div className="relative">
             <label className="block text-gray-600">Password</label>
             <input
               type={showPassword ? "text" : "password"}
-              name="password"
-              placeholder="Enter your password"
-              value={user.password}
-              onChange={handleChange}
+              {...register("password",{required:"Password is required"})}
+               placeholder="Enter your Password"
               className="w-full p-3 border text-black rounded-lg focus:ring focus:ring-blue-200 outline-none"
-              required
+              
             />
             <button
               type="button"
@@ -90,14 +74,19 @@ const Page = () => {
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
+            {
+                errors.password&&(
+                    <p className="text-red-500 text-sm mt-1">{String(errors.password.message)}</p> 
+                )
+            }
           </div>
 
           <button
             type="submit"
             className="w-full bg-blue-500 text-white p-3 rounded-lg font-semibold hover:bg-blue-600 transition duration-300"
-            disabled={loading}
+            disabled={isSubmitting}
           >
-            {loading ? "Logging in..." : "Login"}
+            {isSubmitting ? "Logging in..." : "Login"}
           </button>
         </form>
 

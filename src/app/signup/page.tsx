@@ -3,101 +3,93 @@
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation"; 
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
 
 
 const SignupPage = () => {
   const router=useRouter()
-  const [user, setUser] = useState({
-    email: "",
-    password: "",
-    userName: "",
-  });
-  const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
+  
+ 
+  const {register,handleSubmit,formState:{errors,isSubmitting}}=useForm()
+ 
+  
   const [showPassword,setshowPassword]=useState(false)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUser({ ...user, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage("");
-    setError("");
-
+  const OnSubmit = async (data:any) => {
     try {
       const res = await fetch("/api/users/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(user),
+        body: JSON.stringify(data),
       });
 
-      const data = await res.json();
+      const result = await res.json();
       if (res.ok) {
-        setMessage(" Registration successful! ");
+        toast.success(" Registration successful! ");
           router.push("/login")
       } else {
-        setError(data.error || "Something went wrong.");
+        toast.error(result.error || "Something went wrong.");
       }
     } catch {
-      setError("Error connecting to server.");
-    } finally {
-      setLoading(false);
-    }
+        toast.error("Error connecting to server.");
+    } 
   };
     const toggleP=()=>{
         setshowPassword(!showPassword)
     }
+   
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 px-4">
-      <div className="w-full ring-2 py-14 rign-sky-500 max-w-md p-8 bg-white rounded-2xl  shadow-lg">
+    <div className="flex justify-center   items-center min-h-screen bg-gray-100 px-4">
+      <div className="w-full ring-2 py-14  rign-sky-500 max-w-md p-8 bg-white rounded-2xl  shadow-lg">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
           Create an Account
         </h2>
 
-        {message && <p className="text-center text-green-500">{message}</p>}
-        {error && <p className="text-center text-red-500">{error}</p>}
+       
 
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit( OnSubmit)} className="space-y-4">
           <div>
             <label className="block text-gray-600">Username</label>
             <input
               type="text"
-              name="userName"
               placeholder="Enter your username"
-              value={user.userName}
-              onChange={handleChange}
+              {...register("userName",{required:"Username is required"})}
               className="w-full p-3 border text-black rounded-lg focus:ring focus:ring-blue-200 outline-none"
-              required
+              
             />
+            {errors.userName && (
+              <p className="text-red-500 text-sm mt-1">{errors.userName.message as String}</p>
+            )}
           </div>
 
           <div>
             <label className="block text-gray-600">Email</label>
             <input
               type="email"
-              name="email"
+              
               placeholder="Enter your email"
-              value={user.email}
-              onChange={handleChange}
+              {...register("email",{required:"Email is required"})}
               className="w-full p-3 border text-black rounded-lg focus:ring focus:ring-blue-200 outline-none"
-              required
+              
             />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">{errors.email.message as String}</p>
+            )}
           </div>
 
           <div className="relative">
             <label className="block text-gray-600">Password</label>
             <input
               type={showPassword? "text":"password"}
-              name="password"
+             
               placeholder="Enter your password"
-              value={user.password}
-              onChange={handleChange}
+              {...register("password",{required:"Password is required"})}
               className="w-full p-3 border text-black rounded-lg focus:ring focus:ring-blue-200 outline-none"
-              required
+            
             />
+           
+
               <button
               type="button"
               onClick={toggleP}
@@ -105,14 +97,17 @@ const SignupPage = () => {
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">{errors.password.message as String}</p>
+            )}
           </div>
 
           <button
             type="submit"
             className="w-full bg-blue-500 text-white p-3 rounded-lg font-semibold hover:bg-blue-600 transition duration-300"
-            disabled={loading}
+            disabled={isSubmitting}
           >
-            {loading ? "Registering..." : "Sign Up"}
+            {isSubmitting ? "Registering..." : "Sign Up"}
           </button>
         </form>
 
