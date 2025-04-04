@@ -6,11 +6,21 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 
+type FormData = {
+  email: string;
+  password: string;
+};
+
 const Page = () => {
   const router = useRouter();
- const {register,handleSubmit,formState:{errors,isSubmitting}}=useForm()
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<FormData>();
   const [showPassword, setShowPassword] = useState(false);
-  const onSubmit = async (data:any) => {
+
+  const onSubmit = async (data: FormData) => {
     try {
       const res = await fetch("/api/users/login", {
         method: "POST",
@@ -18,16 +28,17 @@ const Page = () => {
         body: JSON.stringify(data),
       });
 
-      const result = await res.json();
+      await res.json(); 
+
       if (res.ok) {
-        toast.success(" Login successful");
+        toast.success("Login successful");
         router.push("/");
       } else {
-        toast.error( "Invalid credentials.");
+        toast.error("Invalid credentials.");
       }
     } catch {
-        toast.error("Error connecting to server.");
-    } 
+      toast.error("Error connecting to server.");
+    }
   };
 
   const togglePasswordVisibility = () => {
@@ -39,33 +50,27 @@ const Page = () => {
       <div className="w-full ring-2 py-14 ring-sky-500 max-w-md p-8 bg-white rounded-2xl shadow-lg">
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Login</h2>
 
-       
-
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <label className="block text-gray-600">Email</label>
             <input
               type="email"
-             {...register("email",{required:"Email is required"})}
+              {...register("email", { required: "Email is required" })}
               placeholder="Enter your email"
               className="w-full p-3 border text-black rounded-lg focus:ring focus:ring-blue-200 outline-none"
-              
             />
-            {
-                errors.email&&(
-                    <p className="text-red-500 text-sm mt-1">{String(errors.email.message)}</p> 
-                )
-            }
+            {errors.email?.message && (
+              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+            )}
           </div>
 
           <div className="relative">
             <label className="block text-gray-600">Password</label>
             <input
               type={showPassword ? "text" : "password"}
-              {...register("password",{required:"Password is required"})}
-               placeholder="Enter your Password"
+              {...register("password", { required: "Password is required" })}
+              placeholder="Enter your Password"
               className="w-full p-3 border text-black rounded-lg focus:ring focus:ring-blue-200 outline-none"
-              
             />
             <button
               type="button"
@@ -74,11 +79,9 @@ const Page = () => {
             >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
-            {
-                errors.password&&(
-                    <p className="text-red-500 text-sm mt-1">{String(errors.password.message)}</p> 
-                )
-            }
+            {errors.password?.message && (
+              <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+            )}
           </div>
 
           <button
@@ -91,7 +94,7 @@ const Page = () => {
         </form>
 
         <p className="text-center text-gray-600 mt-4">
-          Don&apos;t have an account? {" "}
+          Don&apos;t have an account?{" "}
           <a href="/signup" className="text-blue-500 font-semibold">
             Sign Up
           </a>
