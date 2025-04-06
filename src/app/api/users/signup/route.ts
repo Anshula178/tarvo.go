@@ -8,10 +8,11 @@ export async  function POST(req:NextRequest){
     try {
         const reqBody=await req.json()
         const {userName,email,password}=reqBody
-        const user=await User.findOne({email})
+        const user=await User.findOne({ $or:[{email},{userName}]})
         if(user){
-            return NextResponse.json({error:"User already exists"},{status:400})
+            return NextResponse.json({error:"User with this email or username already exists"},{status:400})
         }
+       
         const salt=await bcryptjs.genSalt(10)
         const hashedPassword=await bcryptjs.hash(password,salt)
         const newUser=new User({

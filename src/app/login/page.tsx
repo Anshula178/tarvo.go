@@ -5,6 +5,8 @@ import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "@/validations/loginSchema";
 
 type FormData = {
   email: string;
@@ -17,7 +19,7 @@ const Page = () => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<FormData>();
+  } = useForm<FormData>({resolver:zodResolver(loginSchema)});
   const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data: FormData) => {
@@ -55,7 +57,7 @@ const Page = () => {
             <label className="block text-gray-600">Email</label>
             <input
               type="email"
-              {...register("email", { required: "Email is required" })}
+              {...register("email")}
               placeholder="Enter your email"
               className="w-full p-3 border text-black rounded-lg focus:ring focus:ring-blue-200 outline-none"
             />
@@ -68,7 +70,7 @@ const Page = () => {
             <label className="block text-gray-600">Password</label>
             <input
               type={showPassword ? "text" : "password"}
-              {...register("password", { required: "Password is required" })}
+              {...register("password")}
               placeholder="Enter your Password"
               className="w-full p-3 border text-black rounded-lg focus:ring focus:ring-blue-200 outline-none"
             />

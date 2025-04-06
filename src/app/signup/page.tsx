@@ -6,12 +6,9 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SignupSchema, signupSchema } from "@/validations/registerSchema";
 
-type SignupFormData = {
-  userName: string;
-  email: string;
-  password: string;
-};
 
 const SignupPage = () => {
   const router = useRouter();
@@ -20,11 +17,11 @@ const SignupPage = () => {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<SignupFormData>();
+  } = useForm<SignupSchema>({resolver:zodResolver(signupSchema)});
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const OnSubmit = async (data: SignupFormData) => {
+  const OnSubmit = async (data: SignupSchema) => {
     try {
       const res = await fetch("/api/users/signup", {
         method: "POST",
@@ -61,7 +58,7 @@ const SignupPage = () => {
             <input
               type="text"
               placeholder="Enter your username"
-              {...register("userName", { required: "Username is required" })}
+              {...register("userName")}
               className="w-full p-3 border text-black rounded-lg focus:ring focus:ring-blue-200 outline-none"
             />
             {errors.userName && (
@@ -74,7 +71,7 @@ const SignupPage = () => {
             <input
               type="email"
               placeholder="Enter your email"
-              {...register("email", { required: "Email is required" })}
+              {...register("email")}
               className="w-full p-3 border text-black rounded-lg focus:ring focus:ring-blue-200 outline-none"
             />
             {errors.email && (
@@ -87,7 +84,7 @@ const SignupPage = () => {
             <input
               type={showPassword ? "text" : "password"}
               placeholder="Enter your password"
-              {...register("password", { required: "Password is required" })}
+              {...register("password")}
               className="w-full p-3 border text-black rounded-lg focus:ring focus:ring-blue-200 outline-none"
             />
             <button
